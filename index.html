@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARI.SHEXANI - Digital Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Cairo:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* CSS Variables for easy theming */
+        :root {
+            /* Light Mode */
+            --primary-accent: #3498db; /* A softer blue */
+            --background-start: #eef1f6; /* Very light blue-grey */
+            --background-end: #ffffff; /* White */
+            --text-color-primary: #2c3e50; /* Darker blue-grey */
+            --text-color-secondary: #7f8c8d; /* Muted grey */
+            --card-background: #ffffff;
+            --border-color: #e0e6ed;
+            --button-bg: #f4f7fa;
+            --button-text: var(--text-color-primary);
+            --button-hover-bg: var(--primary-accent);
+            --button-hover-text: white;
+            --shadow-light: 0 5px 20px rgba(0, 0, 0, 0.07);
+            --shadow-dark: 0 10px 35px rgba(0, 0, 0, 0.15);
+            --profile-border: var(--primary-accent);
+            --profile-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+            --pulse-color: var(--primary-accent);
+            --selection-bg: var(--primary-accent);
+            --selection-text: white;
+            --section-bg: #fdfefe; /* Light background for new section */
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --primary-accent: #f39c12; /* Warm orange for dark mode accents */
+            --background-start: #1c2a38; /* Dark blue-grey */
+            --background-end: #141f2a; /* Even darker blue-grey */
+            --text-color-primary: #ecf0f1; /* Light grey */
+            --text-color-secondary: #bdc3c7; /* Muted light grey */
+            --card-background: #233140;
+            --border-color: #34495e;
+            --button-bg: #34495e;
+            --button-text: var(--text-color-primary);
+            --button-hover-bg: var(--primary-accent);
+            --button-hover-text: #2c3e50; /* Darker text on orange hover */
+            --shadow-light: 0 5px 20px rgba(0, 0, 0, 0.3);
+            --shadow-dark: 0 10px 35px rgba(0, 0, 0, 0.5);
+            --profile-border: var(--primary-accent);
+            --profile-shadow: 0 0 30px rgba(243, 156, 18, 0.6);
+            --pulse-color: var(--primary-accent);
+            --selection-bg: var(--primary-accent);
+            --selection-text: #2c3e50;
+            --section-bg: #2b3b4d; /* Dark background for new section */
+        }
+
+        /* Global Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color-primary);
+            display: flex;
+            flex-direction: column; /* Allow vertical stacking */
+            justify-content: flex-start; /* Align content to top */
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto; /* Allow vertical scrolling */
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+            transition: background-color 0.8s ease-in-out, color 0.8s ease-in-out;
+            position: relative;
+            background: linear-gradient(-45deg, var(--background-start), var(--background-end));
+            background-size: 400% 400%;
+            animation: backgroundGradient 15s ease infinite;
+        }
+
+        /* Text Selection Style */
+        ::selection {
+            background-color: var(--selection-bg);
+            color: var(--selection-text);
+        }
+
+        ::-moz-selection {
+            background-color: var(--selection-bg);
+            color: var(--selection-text);
+        }
+
+        /* Background Gradient Animation */
+        @keyframes backgroundGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Particle Effect */
+        .particle-container {
+            position: fixed; /* Fixed so it doesn't scroll with content */
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background-color: rgba(var(--primary-accent-rgb), 0.1); /* Subtle color from accent */
+            border-radius: 50%;
+            animation: floatAndFade 25s infinite ease-in-out; /* Slower, longer animation */
+        }
+        :root {
+            --primary-accent-rgb: 52, 152, 219; /* RGB for --primary-accent in light mode */
+        }
+        body.dark-mode {
+            --primary-accent-rgb: 243, 156, 18; /* RGB for --primary-accent in dark mode */
+        }
+
+        @keyframes floatAndFade {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0.4);
+                opacity: 0;
+            }
+            10% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+            90% { opacity: 0.1; }
+            100% {
+                transform translateY(-20vh) translateX(10vw) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container (Profile Card) */
+        .container {
+            background-color: var(--card-background);
+            border-radius: 25px;
+            padding: 40px 50px;
+            box-shadow: var(--shadow-dark);
+            text-align: center;
+            max-width: 500px; /* Slightly wider */
+            width: 90%;
+            z-index: 1;
+            position: relative;
+            animation: fadeInScale 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+            border: 1px solid var(--border-color);
+            margin-top: 50px; /* Space from top */
+            margin-bottom: 50px; /* Space before next section */
+        }
+
+        /* Animation for main container to fade in */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Header (SRUD.SYAMAND Intro) */
+        .header-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5em;
+            font-weight: 800;
+            color: var(--primary-accent);
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid var(--primary-accent);
+            animation: typing 2.5s steps(15, end) forwards, blink-caret .75s step-end infinite;
+            width: 0;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-accent); }
+        }
+
+        /* Profile Section */
+        .profile-container {
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-picture {
+            width: 170px; /* Slightly larger */
+            height: 170px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid var(--profile-border);
+            box-shadow: var(--profile-shadow);
+            transition: border-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, transform 0.3s ease, filter 0.3s ease;
+            animation: pulse 2s infinite ease-in-out;
+            display: block;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: var(--profile-shadow); }
+            50% { box-shadow: 0 0 38px var(--pulse-color); }
+            100% { box-shadow: var(--profile-shadow); }
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.08);
+            filter: brightness(1.2);
+        }
+
+        /* Profile Message */
+        .profile-message {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.85); /* Darker, slightly more opaque */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 10;
+            text-align: center;
+}
+
+        .profile-message.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0px);
+        }
+
+        h1 {
+            font-family: 'Cairo', sans-serif;
+            font-size: 3em;
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: var(--text-color-primary);
+            transition: color 0.5s ease-in-out;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: var(--text-color-secondary);
+            margin-bottom: 40px;
+            transition: color 0.5s ease-in-out;
+        }
+
+        /* Social Media Buttons */
+        .social-media-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            opacity: 0; /* Starts hidden */
+            transition: opacity 1.5s ease-out;
+        }
+        .social-media-buttons.visible {
+            opacity: 1;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 22px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow-light);
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn:hover {
+            background-color: var(--button-hover-bg);
+            color: var(--button-hover-text);
+            transform: translateY(-7px); /* More lift */
+            box-shadow: var(--shadow-dark);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2);
+            background-color: var(--button-hover-bg);
+        }
+
+        .btn i {
+            margin-right: 12px;
+            font-size: 1.3em;
+        }
+        
+        .tiktok-time {
+            position: absolute; /* Position relative to the .btn */
+            bottom: 5px; /* Adjust as needed */
+            right: 10px; /* Adjust as needed */
+            font-size: 0.7em; /* Very small font size */
+            color: rgba(255, 255, 255, 0.7); /* Slightly transparent white for better visibility */
+            pointer-events: none; /* Make sure it doesn't interfere with button clicks */
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease;
+        }
+
+        .btn.tiktok:hover .tiktok-time {
+            opacity: 1; /* Show on hover */
+        }
+
+        /* Tooltip for buttons */
+        .btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 9px 14px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, top 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+            top: -55px;
+        }
+
+        /* Specific button colors (unchanged, but adjusted for new variables) */
+        .btn.facebook { background-color: #1877F2; color: white; }
+        .btn.facebook:hover { background-color: #1256B8; }
+        .btn.snapchat { background-color: #FFFC00; color: #333; }
+        .btn.snapchat:hover { background-color: #E6E300; }
+        .btn.tiktok { background-color: #222; color: white; }
+        .btn.tiktok:hover { background-color: #000; }
+
+        /* Dark Mode Toggle Button */
+        .theme-toggle {
+            position: fixed; /* Fixed position */
+            top: 25px;
+            right: 25px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 58px;
+            height: 58px;
+            font-size: 1.8em;
+            cursor: pointer;
+            box-shadow: var(--shadow-light);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20; /* Higher z-index */
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--button-hover-bg);
+            color: var(--button-hover-text);
+            transform: scale(1.15);
+            box-shadow: var(--shadow-dark);
+            border-color: transparent;
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Toast Notification (REMOVED: Keeping for completeness, but won't be used) */
+        .toast {
+            visibility: hidden;
+            min-width: 280px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 18px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 40px;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0.5s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-size: 1.1em;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* --- New Section: About Me --- */
+        .about-section {
+            background-color: var(--section-bg);
+            color: var(--text-color-primary);
+            padding: 60px 40px;
+            text-align: center;
+            width: 100%; /* Full width */
+            max-width: 1000px; /* Max width for content within section */
+            margin-top: 60px; /* Space from above */
+            margin-bottom: 60px; /* Space below */
+            border-radius: 25px; /* Match container rounding */
+            box-shadow: var(--shadow-light); /* Subtle shadow */
+            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(20px); /* Slightly below */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .about-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-section h2 {
+            font-family: 'Cairo', sans-serif;
+            font-size: 2.8em;
+            color: var(--primary-accent);
+            margin-bottom: 25px;
+            letter-spacing: -1px;
+        }
+
+        .about-section p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 20px auto;
+            color: var(--text-color-secondary);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .skill-item {
+            background-color: var(--button-bg);
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 6;
+            font-size: 0.95em;
+            color: var(--text-color-primary);
+            box-shadow: var(--shadow-light);
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .skill-item:hover {
+            transform: translateY(-5px);
+            background-color: var(--primary-accent);
+            color: white;
+            box-shadow: var(--shadow-dark);
+        }
+        .skill-item i {
+            margin-bottom: 8px;
+            font-size: 1.8em;
+            color: var(--primary-accent); /* Keep icon color distinct */
+            transition: color 0.3s ease;
+        }
+        .skill-item:hover i {
+             color: white; /* Icon color on hover */
+        }
+
+        /* Scroll To Top Button */
+        #scrollToTopBtn {
+            display: none; /* Hidden by default */
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: var(--primary-accent);
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            box-shadow: var(--shadow-dark);
+            transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0; /* Start invisible */
+            transform: scale(0.8);
+        }
+
+        #scrollToTopBtn.show {
+            display: block; /* Show with JS */
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: var(--button-hover-bg); /* Use a darker shade of accent */
+            filter: brightness(0.9);
+            transform: scale(1.1);
+        }
+
+        /* Error Dialog Styles (Easter Egg) */
+        .error-dialog {
+            width: 350px;
+            border: 1px solid #000;
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom, #ece9d8, #d4d0c8);
+            border-radius: 4px;
+            overflow: hidden;
+            position: absolute;
+            z-index: 1000;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            pointer-events: none;
+            font-family: sans-serif; /* Keep classic font for the dialog */
+        }
+
+        .error-dialog .title-bar {
+            background: linear-gradient(to right, #0a246a, #a6caf0);
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: default;
+        }
+
+        .error-dialog .close-button {
+            background-color: #c0c0c0;
+            border: 1px solid #808080;
+            color: #333;
+            width: 20px;
+            height: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .error-dialog .close-button:active {
+            background-color: #a0a0a0;
+            border-color: #606060;
+        }
+
+        .error-dialog .content {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .error-dialog .error-icon {
+            width: 48px;
+            height: 48px;
+            margin-right: 15px;
+        }
+
+        .error-dialog .content p {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .error-dialog .buttons {
+            display: flex;
+            justify-content: center;
+            padding: 10px 20px;
+            border-top: 1px solid #c0c0c0;
+            background-color: #d4d0c8;
+        }
+
+        .error-dialog .ok-button {
+            background-color: #c0c0c0;
+            border: 1px solid #808080;
+            padding: 5px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 2px;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .error-dialog .ok-button:active {
+            background-color: #a0a0a0;
+            border-color: #606060;
+            box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Spam Error Container */
+        #spamErrorContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        /* Intro Overlay Styles */
+        #introOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-start);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2em;
+            font-weight: 800;
+            color: var(--primary-accent);
+            z-index: 9999;
+            transition: opacity 1.5s ease-out, filter 1s ease-out;
+            filter: blur(20px);
+            animation: unblurIntro 2s forwards;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #introOverlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #introOverlay h2 {
+            font-size: 0.8em;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInText 1s forwards 2.5s;
+        }
+
+        #introOverlay .enter-button {
+            background-color: var(--primary-accent);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            position: relative;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeInButton 1s forwards 3s;
+            max-width: 280px;
+            min-width: 180px;
+            height: auto;
+            text-align: center;
+        }
+
+        #introOverlay .enter-button:hover {
+            background-color: var(--primary-accent);
+            filter: brightness(0.9);
+            transform: scale(1.07);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes unblurIntro {
+            from { filter: blur(20px); }
+            to { filter: blur(0); }
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInButton {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Apply blur to main content while intro is active */
+        body.intro-active .particle-container,
+        body.intro-active .theme-toggle,
+        body.intro-active .container,
+        body.intro-active .about-section,
+        body.intro-active #scrollToTopBtn {
+            filter: blur(5px);
+            transition: filter 0.5s ease-out;
+        }
+
+        body:not(.intro-active) .particle-container,
+        body:not(.intro-active) .theme-toggle,
+        body:not(.intro-active) .container,
+        body:not(.intro-active) .about-section,
+        body:not(.intro-active) #scrollToTopBtn {
+            filter: blur(0);
+        }
+
+        /* Tic-Tac-Toe Game Styles */
+        .game-section {
+            background-color: var(--section-bg);
+            color: var(--text-color-primary);
+            padding: 60px 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 30px;
+            margin-bottom: 60px;
+            border-radius: 25px;
+            box-shadow: var(--shadow-light);
+            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .game-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .game-section h2 {
+            font-family: 'Cairo', sans-serif;
+            font-size: 2.5em;
+            color: var(--primary-accent);
+            margin-bottom: 25px;
+            letter-spacing: -1px;
+        }
+
+        .game-status {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary-accent);
+            min-height: 30px;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 0 auto;
+            max-width: 300px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background-color: var(--card-background);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--primary-accent);
+        }
+
+        .cell:hover {
+            background-color: var(--button-bg);
+            transform: scale(1.05);
+        }
+
+        .cell.x {
+            color: #3498db;
+        }
+
+        .cell.o {
+            color: #f39c12;
+        }
+
+        .game-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .game-btn {
+            padding: 12px 25px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .game-btn:hover {
+            background-color: var(--button-hover-bg);
+            color: var(--button-hover-text);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .game-btn:active {
+            transform: translateY(0);
+        }
+
+        .game-btn.reset {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .game-btn.reset:hover {
+            background-color: #c0392b;
+        }
+
+        .winning-cell {
+            animation: pulse-win 0.5s infinite alternate;
+        }
+
+        @keyframes pulse-win {
+            from {
+                box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+                transform: scale(1);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(46, 204, 113, 0.8);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Confetti Effect */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            animation: confetti-fall 5s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Game Mode Selection */
+        .game-mode-selection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 15px 30px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+
+        .mode-btn:hover, .mode-btn.active {
+            background-color: var(--primary-accent);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .mode-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 35px 30px;
+                max-width: 95%;
+            }
+            .header-title {
+                font-size: 2.8em;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            .profile-picture {
+                width: 150px;
+                height: 150px;
+            }
+            .tagline {
+                font-size: 1.05em;
+            }
+            .social-media-buttons {
+                gap: 15px;
+            }
+            .btn {
+                font-size: 0.95em;
+                padding: 12px 18px;
+            }
+            .btn i {
+                margin-right: 10px;
+                font-size: 1.2em;
+            }
+            .theme-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5em;
+                top: 20px;
+                right: 20px;
+            }
+            .profile-message {
+                font-size: 0.85em;
+                padding: 7px 10px;
+                bottom: -38px;
+            }
+            .about-section {
+                padding: 50px 25px;
+            }
+            .about-section h2 {
+                font-size: 2.2em;
+            }
+            .about-section p {
+                font-size: 1em;
+            }
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 15px;
+            }
+            .skill-item {
+                font-size: 0.9em;
+            }
+            .skill-item i {
+                font-size: 1.6em;
+            }
+            #scrollToTopBtn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px;
+                font-size: 1.3em;
+            }
+            .game-section {
+                padding: 50px 25px;
+            }
+            .game-section h2 {
+                font-size: 2em;
+            }
+            .game-status {
+                font-size: 1.1em;
+            }
+            .game-board {
+                max-width: 280px;
+            }
+            .cell {
+                font-size: 2.5em;
+            }
+            .game-mode-selection {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .mode-btn {
+                width: 80%;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .header-title {
+                font-size: 2em;
+                letter-spacing: -1px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .profile-picture {
+                width: 120px;
+                height: 120px;
+                border-width: 5px;
+            }
+            .tagline {
+                font-size: 0.95em;
+            }
+            .social-media-buttons {
+                gap: 12px;
+            }
+            .btn {
+                font-size: 0.9em;
+                padding: 10px 15px;
+                border-radius: 8px;
+            }
+            .btn i {
+                margin-right: 8px;
+                font-size: 1.1em;
+            }
+            .theme-toggle {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3em;
+                top: 15px;
+                right: 15px;
+            }
+            .profile-message {
+                font-size: 0.8em;
+                padding: 6px 9px;
+                bottom: -30px;
+            }
+            .about-section {
+                padding: 40px 15px;
+            }
+            .about-section h2 {
+                font-size: 1.8em;
+            }
+            .about-section p {
+                font-size: 0.95em;
+            }
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .skill-item {
+                font-size: 0.85em;
+                padding: 12px;
+            }
+            .skill-item i {
+                font-size: 1.4em;
+            }
+            #scrollToTopBtn {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px;
+                font-size: 1.2em;
+            }
+            .game-section {
+                padding: 40px 15px;
+            }
+            .game-section h2 {
+                font-size: 1.8em;
+            }
+            .game-status {
+                font-size: 1em;
+            }
+            .game-board {
+                max-width: 260px;
+            }
+            .cell {
+                font-size: 2em;
+            }
+            .game-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .game-btn {
+                width: 100%;
+            }
+            .mode-btn {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body class="intro-active">
+    <div id="introOverlay">
+        VARİ.SHEXANI
+        <button id="enterButton" class="enter-button">کلیک بکە بۆ چونە ژوورەوە👐🏻</button>
+    </div>
+
+    <div class="particle-container" id="particle-container"></div>
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <button id="themeToggle" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container">
+        <div class="header-title" id="typing-title"></div>
+
+        <div class="profile-container">
+            <img src="vari.jpeg" alt="VARI.SHEXANI Picture" class="profile-picture" id="profilePicture">
+            <div class="profile-message" id="profileMessage"> ‎
+                چیە برام کێشەت هەیە لەگەڵم؟
+            </div>
+        </div>
+        <h1>سۆشیاڵ میدیاکانم</h1>
+        <p class="tagline">بێجگە لە تۆ کەس جوان نیە ئیلهامی شعری جوان نیە سەرچاوەی شعرم تەنیا تۆی جوانترین جوانی دونیا تۆی (🩵)</p>
+
+        <div class="social-media-buttons" id="socialMediaButtons">
+            <a href="https://snapchat.com/t/FZipuE2X" target="_blank" rel="noopener noreferrer" class="btn snapchat" data-tooltip="Snapchat">
+                <i class="fab fa-snapchat-ghost"></i> Snapchat
+            </a>
+            <a href="https://www.tiktok.com/@shexaniim?_t=ZS-8wYz3UMxCSH&_r=1" target="_blank" rel="noopener noreferrer" class="btn tiktok" data-tooltip="TikTok">
+                <i class="fab fa-tiktok"></i> TikTok
+                <span class="tiktok-time" id="tiktokCurrentTime"></span>
+            </a>
+        </div>
+    </div>
+
+    <div class="game-section" id="gameSection">
+        <h2>ئەو یاریەم بۆخۆشی و کات بەسەر بردن دروست کردوە🤝🏻💜</h2>
+        <div class="game-mode-selection">
+            <button class="mode-btn active" id="modeFriend">لەگەڵ هاورێکەت یاری بکەی</button>
+            <button class="mode-btn" id="modeRobot">لەگەڵ رۆبۆت یاری بکەی</button>
+        </div>
+        <div class="game-status" id="gameStatus">Player X's turn</div>
+        <div class="game-board" id="gameBoard">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+        <div class="game-buttons">
+            <button class="game-btn reset" id="resetGame">یاریەکە رێسێت بکەوە</button>
+            <button class="game-btn" id="newGame">یاریەکی نوێ</button>
+        </div>
+    </div>
+
+    <button id="scrollToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div id="toast" class="toast">
+        Number copied: +9647XXXXXXXXX
+    </div>
+
+    <script>
+        // --- JavaScript for dynamic effects and functionality ---
+
+        // Function to speak text
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                if (window.speechSynthesis.speaking) {
+                    window.speechSynthesis.cancel();
+                }
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US'; // Explicitly set language to English (US)
+
+                let voices = window.speechSynthesis.getVoices();
+                // Try to find a specific English voice first
+                let englishVoice = voices.find(voice => voice.lang === 'en-US' && (voice.name.includes('Google') || voice.name.includes('Microsoft'))) ||
+                                   voices.find(voice => voice.lang === 'en-GB' && (voice.name.includes('Google') || voice.name.includes('Microsoft'))) ||
+                                   voices.find(voice => voice.lang.startsWith('en')); // Fallback to any English voice
+
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
+                } else {
+                    console.warn("No specific English voice found, using browser's default English voice based on lang setting.");
+                }
+
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn("Speech Synthesis API not supported in this browser.");
+            }
+        }
+
+        // Global body variable for theme toggle and intro
+        const body = document.body;
+
+        // Intro Effect and Voice
+        document.addEventListener('DOMContentLoaded', () => {
+            const introOverlay = document.getElementById('introOverlay');
+            const enterButton = document.getElementById('enterButton');
+            const typingTitle = document.getElementById('typing-title');
+            const socialMediaButtons = document.getElementById('socialMediaButtons');
+            const gameSection = document.getElementById('gameSection');
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+            // This function runs when the "Enter Website" button is clicked
+            const startWebsite = () => {
+                speak("Welcome to Vari Shekhani website!"); // English welcome message
+
+                introOverlay.classList.add('fade-out');
+                body.classList.remove('intro-active');
+
+                introOverlay.addEventListener('transitionend', () => {
+                    if (introOverlay.classList.contains('fade-out')) {
+                        setTimeout(typeText, 500); // Start typing after intro fades
+                        setTimeout(() => {
+                            gameSection.classList.add('visible'); // Show game section
+                        }, 2000); // Delay showing game section after typing
+                    }
+                }, { once: true });
+
+                // IMPORTANT: Move this line HERE, inside the function
+                enterButton.removeEventListener('click', startWebsite);
+            };
+
+            enterButton.addEventListener('click', startWebsite);
+
+            // Typing Effect for "VARI.SHEKHANI"
+            const textToType = "VARI.SHEKHANI";
+            let charIndex = 0;
+
+            function typeText() {
+                if (charIndex < textToType.length) {
+                    typingTitle.textContent += textToType.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeText, 150);
+                } else {
+                    typingTitle.style.borderRight = 'none';
+                    socialMediaButtons.classList.add('visible'); // Fade in buttons after typing
+                }
+            }
+
+            // Apply saved theme on load
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.getElementById('themeToggle');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            themeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        });
+
+        // Profile Picture Message on Hover
+        const profilePicture = document.getElementById('profilePicture');
+        const profileMessage = document.getElementById('profileMessage');
+
+        profilePicture.addEventListener('mouseenter', () => {
+            profileMessage.classList.add('show');
+            speak("What's up, brother? Got a problem with me?"); // English profile message
+        });
+
+        profilePicture.addEventListener('mouseleave', () => {
+            profileMessage.classList.remove('show');
+            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+        });
+
+        // Particle Background Effect
+        const particleContainer = document.getElementById('particle-container');
+        const numParticles = 60;
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 10 + 5; // Size between 5px and 15px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100 + 100}vh`; // Start below viewport
+            particle.style.animationDelay = `${Math.random() * -25}s`; // Stagger animation start
+            particle.style.animationDuration = `${Math.random() * 20 + 25}s`; // Vary duration
+            particleContainer.appendChild(particle);
+        }
+
+        for (let i = 0; i < numParticles; i++) {
+            createParticle();
+        }
+
+        // Easter Egg: Secret Error Spam
+        const ERROR_SPAM_COUNT = 500;
+        const ERROR_MESSAGE = "ERROR: SYSTEM OVERLOAD DETECTED!";
+        let tapCount = 0;
+        let lastTapTime = 0;
+
+        const spamErrorContainer = document.createElement('div');
+        spamErrorContainer.id = 'spamErrorContainer';
+        spamErrorContainer.style.position = 'fixed';
+        spamErrorContainer.style.top = '0';
+        spamErrorContainer.style.left = '0';
+        spamErrorContainer.style.width = '100%';
+        spamErrorContainer.style.height = '100%';
+        spamErrorContainer.style.pointerEvents = 'none';
+        spamErrorContainer.style.zIndex = '999';
+        spamErrorContainer.style.overflow = 'hidden';
+        document.body.appendChild(spamErrorContainer);
+
+        function createSpamErrorMessage() {
+            const dialog = document.createElement('div');
+            dialog.className = 'error-dialog';
+
+            const offsetX = Math.random() * window.innerWidth * 0.4 - window.innerWidth * 0.2;
+            const offsetY = Math.random() * window.innerHeight * 0.4 - window.innerHeight * 0.2;
+
+            dialog.style.left = `calc(50% + ${offsetX}px)`;
+            dialog.style.top = `calc(50% + ${offsetY}px)`;
+            dialog.style.transform = 'translate(-50%, -50%) scale(0.7)';
+            dialog.style.opacity = '0';
+            dialog.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+            dialog.style.zIndex = '1000';
+
+            dialog.innerHTML = `
+                <div class="title-bar">
+                    CRITICAL ERROR
+                    <button class="close-button">X</button>
+                </div>
+                <div class="content">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Red_x.svg/1200px-Red_x.svg.png" alt="Error Icon" class="error-icon">
+                    <p>${ERROR_MESSAGE}</p>
+                </div>
+                <div class="buttons">
+                    <button class="ok-button">OK</button>
+                </div>
+            `;
+
+            const closeButton = dialog.querySelector('.close-button');
+            const okButton = dialog.querySelector('.ok-button');
+
+            const removeDialog = () => {
+                dialog.style.opacity = '0';
+                dialog.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                dialog.addEventListener('transitionend', () => dialog.remove(), { once: true });
+                if (spamErrorContainer.children.length === 1) {
+                    spamErrorContainer.style.pointerEvents = 'none';
+                }
+            };
+
+            closeButton.addEventListener('click', removeDialog);
+            okButton.addEventListener('click', removeDialog);
+
+            spamErrorContainer.appendChild(dialog);
+            setTimeout(() => {
+                dialog.style.transform = 'translate(-50%, -50%) scale(1)';
+                dialog.style.opacity = '1';
+                dialog.style.pointerEvents = 'auto';
+            }, 50);
+
+            return dialog;
+        }
+
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('.container') || event.target.closest('.error-dialog') || event.target.closest('#introOverlay') || event.target.closest('#scrollToTopBtn')) {
+                return;
+            }
+
+            const currentTime = new Date().getTime();
+            if (currentTime - lastTapTime < 300) {
+                tapCount++;
+                if (tapCount === 3) {
+                    triggerErrorSpam();
+                    tapCount = 0;
+                }
+            } else {
+                tapCount = 1;
+            }
+            lastTapTime = currentTime;
+        });
+
+        // Scroll to Top Button Functionality
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener('click', () => {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        });
+
+        // Confetti Effect Function
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confettiContainer');
+            confettiContainer.innerHTML = ''; // Clear previous confetti
+            
+            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+            const confettiCount = 100;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random position
+                const left = Math.random() * 100;
+                confetti.style.left = `${left}%`;
+                
+                // Random color
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.backgroundColor = color;
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                
+                // Random shape (square or circle)
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                // Random animation duration
+                const duration = Math.random() * 3 + 2;
+                confetti.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                const delay = Math.random() * 5;
+                confetti.style.animationDelay = `${delay}s`;
+                
+                confettiContainer.appendChild(confetti);
+            }
+            
+            // Remove confetti after animation completes
+            setTimeout(() => {
+                confettiContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Tic-Tac-Toe Game Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameBoard = document.getElementById('gameBoard');
+            const cells = document.querySelectorAll('.cell');
+            const gameStatus = document.getElementById('gameStatus');
+            const resetGameBtn = document.getElementById('resetGame');
+            const newGameBtn = document.getElementById('newGame');
+            const modeFriendBtn = document.getElementById('modeFriend');
+            const modeRobotBtn = document.getElementById('modeRobot');
+
+            let currentPlayer = 'X';
+            let gameState = ['', '', '', '', '', '', '', '', ''];
+            let gameActive = true;
+            let gameMode = 'friend'; // 'friend' or 'robot'
+
+            const winningConditions = [
+                [0, 1, 2], // top row
+                [3, 4, 5], // middle row
+                [6, 7, 8], // bottom row
+                [0, 3, 6], // left column
+                [1, 4, 7], // middle column
+                [2, 5, 8], // right column
+                [0, 4, 8], // diagonal top-left to bottom-right
+                [2, 4, 6]  // diagonal top-right to bottom-left
+            ];
+
+            // Handle cell click
+            function handleCellClick(e) {
+                const clickedCell = e.target;
+                const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+
+                // If cell is already filled or game is not active, ignore click
+                if (gameState[clickedCellIndex] !== '' || !gameActive) {
+                    return;
+                }
+
+                // Update game state and UI
+                makeMove(clickedCellIndex, currentPlayer);
+
+                // Check for win or draw
+                if (checkResult()) return;
+
+                // Switch player or trigger robot move
+                if (gameMode === 'friend') {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    gameStatus.textContent = `Player ${currentPlayer}'s turn`;
+                } else if (gameMode === 'robot' && currentPlayer === 'X') {
+                    // Robot plays as 'O'
+                    gameStatus.textContent = `Robot's turn...`;
+                    setTimeout(robotMove, 700); // Delay robot move for better UX
+                }
+            }
+
+            function makeMove(index, player) {
+                gameState[index] = player;
+                cells[index].textContent = player;
+                cells[index].classList.add(player.toLowerCase());
+            }
+
+            function checkResult() {
+                let roundWon = false;
+                let winningLine = [];
+
+                // Check all winning conditions
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    if (gameState[a] === '' || gameState[b] === '' || gameState[c] === '') {
+                        continue;
+                    }
+                    if (gameState[a] === gameState[b] && gameState[b] === gameState[c]) {
+                        roundWon = true;
+                        winningLine = [a, b, c];
+                        break;
+                    }
+                }
+
+                if (roundWon) {
+                    gameStatus.textContent = `Player ${currentPlayer} wins!`;
+                    gameActive = false;
+                    speak(`Player ${currentPlayer} wins the game!`);
+                    createConfetti(); // Trigger confetti effect
+                    winningLine.forEach(index => cells[index].classList.add('winning-cell'));
+                    return true;
+                }
+
+                // Check for draw
+                if (!gameState.includes('')) {
+                    gameStatus.textContent = "Game ended in a draw!";
+                    gameActive = false;
+                    speak("The game ended in a draw!");
+                    return true;
+                }
+                return false;
+            }
+
+            function robotMove() {
+                if (!gameActive) return;
+
+                let bestMove = getBestMove(gameState);
+                if (bestMove !== -1) {
+                    makeMove(bestMove, 'O');
+                    if (!checkResult()) {
+                        currentPlayer = 'X'; // Switch back to human player
+                        gameStatus.textContent = `Player ${currentPlayer}'s turn`;
+                    }
+                }
+            }
+
+            // Minimax algorithm (simplified for Tic-Tac-Toe)
+            function getBestMove(board) {
+                let availableMoves = [];
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        availableMoves.push(i);
+                    }
+                }
+
+                // Prioritize winning moves
+                for (let i = 0; i < availableMoves.length; i++) {
+                    const move = availableMoves[i];
+                    board[move] = 'O'; // Try robot's move
+                    if (checkWinner(board, 'O')) {
+                        board[move] = ''; // Undo
+                        return move;
+                    }
+                    board[move] = ''; // Undo
+                }
+
+                // Block opponent's winning moves
+                for (let i = 0; i < availableMoves.length; i++) {
+                    const move = availableMoves[i];
+                    board[move] = 'X'; // Try opponent's move
+                    if (checkWinner(board, 'X')) {
+                        board[move] = ''; // Undo
+                        return move;
+                    }
+                    board[move] = ''; // Undo
+                }
+
+                // Prioritize center
+                if (board[4] === '') return 4;
+
+                // Prioritize corners
+                const corners = [0, 2, 6, 8];
+                const availableCorners = corners.filter(index => board[index] === '');
+                if (availableCorners.length > 0) {
+                    return availableCorners[Math.floor(Math.random() * availableCorners.length)];
+                }
+
+                // Take any remaining available move
+                if (availableMoves.length > 0) {
+                    return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                }
+                
+                return -1; // Should not happen in a valid game
+            }
+
+            function checkWinner(board, player) {
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    if (board[a] === player && board[b] === player && board[c] === player) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+
+            // Reset the game (keep same players)
+            function resetGame() {
+                gameState = ['', '', '', '', '', '', '', '', ''];
+                gameActive = true;
+                currentPlayer = 'X';
+                gameStatus.textContent = `Player ${currentPlayer}'s turn`;
+                speak("Game reset. Player X's turn");
+
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.classList.remove('x', 'o', 'winning-cell');
+                });
+            }
+
+            // Start a new game (reset everything)
+            function newGame() {
+                resetGame();
+                speak("New game started. Player X's turn");
+            }
+
+            function setGameMode(mode) {
+                gameMode = mode;
+                modeFriendBtn.classList.remove('active');
+                modeRobotBtn.classList.remove('active');
+                if (mode === 'friend') {
+                    modeFriendBtn.classList.add('active');
+                    gameStatus.textContent = "Player X's turn";
+                    speak("Playing with a friend. Player X's turn");
+                } else {
+                    modeRobotBtn.classList.add('active');
+                    gameStatus.textContent = "Player X's turn (You vs Robot)";
+                    speak("Playing with the robot. You are X.");
+                }
+                resetGame(); // Reset game when mode changes
+            }
+
+            // Event listeners
+            cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+            resetGameBtn.addEventListener('click', resetGame);
+            newGameBtn.addEventListener('click', newGame);
+            modeFriendBtn.addEventListener('click', () => setGameMode('friend'));
+            modeRobotBtn.addEventListener('click', () => setGameMode('robot'));
+
+            // Initialize game mode to 'friend' on load
+            setGameMode('friend');
+        });
+
+        // Function to update the TikTok current time
+        function updateTikTokTime() {
+            const tiktokTimeElement = document.getElementById('tiktokCurrentTime');
+            if (tiktokTimeElement) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                tiktokTimeElement.textContent = `${hours}:${minutes}`;
+            }
+        }
+
+        // Call the function to update the time initially and then every minute
+        updateTikTokTime();
+        setInterval(updateTikTokTime, 60000); // Update every minute
+    </script>
+</body>
+</html>
